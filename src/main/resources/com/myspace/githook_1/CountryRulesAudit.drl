@@ -1,0 +1,48 @@
+package com.myspace.githook_1;
+
+
+//from row number: 1
+//MX -1
+rule "Row 1 CountryRulesAudit"
+	@RuleId(1ABC)
+	salience 200
+	ruleflow-group "CountryAuditRF"
+	dialect "mvel"
+	when
+		shpi : ShipmentObjectInterface( countryCode == "MX" , countryColor == "Red" , countryName == "Mexico" , countryNumber == "1" )
+		tlog : TryLog()
+		ctryi : CountryResultInterface( notes == "MX-ORIG" )
+	then
+		tlog.setMessage( "countryCode=" + shpi.getCountryCode() + "|countryName= "+ shpi.getCountryName + "|countryColor= "+ shpi.getCountryColor()+ "|countryNumber="+ shpi.getCountryNumber  + "|countryResultNotes= " + ctryi.getNotes() );   
+		insert(tlog);    System.out.println("setting notes");
+		modify( ctryi ) {
+				setNotes( "MX-NEW" )
+		}
+		modify( shpi ) {
+				setCountryColor( "Green" )
+		}
+		
+end
+
+//from row number: 2
+//MX-2
+rule "Row 2 CountryRulesAudit"
+	@RuleId(2ABC)
+	salience 20
+	ruleflow-group "CountryAuditRF"
+	dialect "mvel"
+	when
+		shpi : ShipmentObjectInterface( countryCode == "MX" , countryColor == "Red" )
+		tlog : TryLog()
+		ctryi : CountryResultInterface( notes == "MX-ORIG" )
+	then
+		tlog.setMessage( "countryCode=" + shpi.getCountryCode() + "|countryName= "+ shpi.getCountryName + "|countryColor= "+ shpi.getCountryColor()+ "|countryNumber="+ shpi.getCountryNumber  + "|countryResultNotes= " + ctryi.getNotes() );   
+		insert(tlog);    System.out.println("setting notes");
+		modify( ctryi ) {
+				setNotes( "MX-NEW2" )
+		}
+		modify( shpi ) {
+				setCountryColor( "Yellow" )
+		}
+end
+

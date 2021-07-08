@@ -1,0 +1,18 @@
+package com.myspace.githook_1;
+
+
+//from row number: 1
+//Initialize
+rule "Row 1 LoggingInvocationRule"
+	@RuleId(Rule0)
+	salience 9999
+	ruleflow-group "LoggingRF"
+	dialect "mvel"
+	when
+		log : LoggingInvocationHandler();
+	then
+		System.out.println ( "kContext:" + kcontext );   
+		log.setRuleContext(kcontext);
+		
+		
+end

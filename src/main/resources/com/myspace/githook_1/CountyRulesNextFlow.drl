@@ -1,0 +1,21 @@
+package com.myspace.githook_1;
+
+//from row number: 1
+//Test 1
+rule "Row 1 CountryResultNextFlow"
+	@RuleId(CountryNextFlow)
+	ruleflow-group "NextFlow"
+	dialect "mvel"
+	when
+		shpi : ShipmentObjectInterface(countryColor == "Red")
+		tlog : TryLog()
+	then
+		tlog.setMessage(  "|countryName= "+ shpi.getCountryName + "|countryColor= "+ shpi.getCountryColor());   
+		insert(tlog);
+		//modify( shpi ) {
+		//		setCountryColor( "Pink" )
+		//}
+		
+		System.out.println("Rule 1 Next is triggered " + shpi.getCountryColor() );
+end
+
